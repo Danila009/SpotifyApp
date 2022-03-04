@@ -1,10 +1,10 @@
 package com.example.spotifyfirebase.screen.profileScreen
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -21,6 +21,7 @@ import com.example.spotifyfirebase.ui.theme.secondaryBackground
 import com.example.spotifyfirebase.utils.Converters.launchWhenStarted
 import kotlinx.coroutines.flow.onEach
 
+@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun ProfileScreen(
     profileViewModel: ProfileViewModel = hiltViewModel(),
@@ -54,17 +55,36 @@ fun ProfileScreen(
              modifier = Modifier.fillMaxSize(),
              color = primaryBackground
          ) {
-             Text(
-                 text = "Hello, ${user.value.username}",
-                 modifier = Modifier.padding(
-                     start = 20.dp,
-                     top = 5.dp,
-                     bottom = 5.dp,
-                     end = 5.dp
-                 ),
-                 fontWeight = FontWeight.Bold,
-                 color = secondaryBackground
-             )
+             Row(
+                 modifier = Modifier.fillMaxWidth(),
+                 horizontalArrangement = Arrangement.SpaceBetween
+             ) {
+                 Text(
+                     text = "Hello, ${user.value.username}",
+                     modifier = Modifier.padding(
+                         start = 20.dp,
+                         top = 5.dp,
+                         bottom = 5.dp,
+                         end = 5.dp
+                     ),
+                     fontWeight = FontWeight.Bold,
+                     color = secondaryBackground
+                 )
+
+                 IconButton(onClick = { /*TODO*/ }) {
+                     Icon(
+                         imageVector = Icons.Default.Settings,
+                         contentDescription = "Setting",
+                         tint = secondaryBackground,
+                         modifier = Modifier.padding(
+                             start = 20.dp,
+                             top = 5.dp,
+                             bottom = 5.dp,
+                             end = 5.dp
+                         )
+                     )
+                 }
+             }
          }
      }, content = {
             Surface(

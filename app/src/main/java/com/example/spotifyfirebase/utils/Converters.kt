@@ -10,4 +10,14 @@ object Converters {
             this@launchWhenStarted.collect()
         }
     }
+
+    fun replaceRange(string: String, int: Int):String{
+        if (string.length < int)
+            return string
+        return string.replaceRange(
+            int until string.length,
+            "..."
+        )
+    }
+
 }
