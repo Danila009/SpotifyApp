@@ -2,11 +2,14 @@ package com.example.spotifyfirebase.navigation.navGraph.musicNavGraph
 
 import androidx.navigation.*
 import androidx.navigation.compose.composable
+import com.example.spotifyfirebase.navigation.navGraph.autorNavGraph.autorNavGraph
+import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRoute.Argument.GENRE_ID
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRoute.Argument.IMAGE_URL
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRoute.Argument.MUSIC_ID
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRoute.Argument.PLAYLIST_ID
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRoute.Route.MUSIC_ROUTE
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
+import com.example.spotifyfirebase.screen.musicScreen.GenreMusicScreen
 import com.example.spotifyfirebase.screen.musicScreen.ImageZoomScreen
 import com.example.spotifyfirebase.screen.musicScreen.MusicInfoScreen
 import com.example.spotifyfirebase.screen.musicScreen.MusicPlaylistScreen
@@ -18,6 +21,11 @@ fun NavGraphBuilder.musicNavGraph(
         startDestination = MusicRouteScreen.MusicPlaylist.route,
         route = MUSIC_ROUTE,
         builder = {
+
+            autorNavGraph(
+                navController = navController
+            )
+
             composable(
                 MusicRouteScreen.MusicPlaylist.route,
                 arguments = listOf(
@@ -70,6 +78,20 @@ fun NavGraphBuilder.musicNavGraph(
                     navController = navController,
                     imageUrl = it.arguments?.getString(IMAGE_URL).toString(),
                     idMusic = it.arguments?.getInt(MUSIC_ID)!!.toInt()
+                )
+            }
+
+            composable(
+                MusicRouteScreen.MusicGenre.route,
+                arguments = listOf(
+                    navArgument(GENRE_ID){
+                        type = NavType.IntType
+                    }
+                )
+            ){
+                GenreMusicScreen(
+                    navController = navController,
+                    genreId = it.arguments!!.getInt(GENRE_ID)
                 )
             }
         }

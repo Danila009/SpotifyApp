@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.example.spotifyfirebase.api.model.user.User
 import com.example.spotifyfirebase.navigation.navGraph.loginNavGraph.constants.LoginRoute.Route.LOGIN_ROUTE
+import com.example.spotifyfirebase.navigation.navGraph.profileNavGraph.constants.ProfileRouteScreen
 import com.example.spotifyfirebase.screen.profileScreen.viewModel.ProfileViewModel
 import com.example.spotifyfirebase.ui.theme.primaryBackground
 import com.example.spotifyfirebase.ui.theme.secondaryBackground
@@ -71,7 +72,7 @@ fun ProfileScreen(
                      color = secondaryBackground
                  )
 
-                 IconButton(onClick = { /*TODO*/ }) {
+                 IconButton(onClick = { navController.navigate(ProfileRouteScreen.UserSetting.route) }) {
                      Icon(
                          imageVector = Icons.Default.Settings,
                          contentDescription = "Setting",

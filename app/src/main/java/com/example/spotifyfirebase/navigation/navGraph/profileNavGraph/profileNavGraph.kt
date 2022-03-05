@@ -8,6 +8,7 @@ import com.example.spotifyfirebase.navigation.navGraph.loginNavGraph.loginNavGra
 import com.example.spotifyfirebase.navigation.navGraph.profileNavGraph.constants.ProfileRoute.Route.PROFILE_ROUTE
 import com.example.spotifyfirebase.navigation.navGraph.profileNavGraph.constants.ProfileRouteScreen
 import com.example.spotifyfirebase.screen.profileScreen.ProfileScreen
+import com.example.spotifyfirebase.screen.profileScreen.UserSettingScreen
 
 fun NavGraphBuilder.profileNavGraph(
     navController: NavController
@@ -22,6 +23,12 @@ fun NavGraphBuilder.profileNavGraph(
 
             composable(ProfileRouteScreen.ProfileScreen.route){
                 ProfileScreen(
+                    navController = navController
+                )
+            }
+
+            composable(ProfileRouteScreen.UserSetting.route){
+                UserSettingScreen(
                     navController = navController
                 )
             }

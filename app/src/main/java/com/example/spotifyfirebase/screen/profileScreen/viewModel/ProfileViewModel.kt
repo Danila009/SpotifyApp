@@ -48,4 +48,16 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun saveStatusRegistration(userRegistration:Boolean){
+        viewModelScope.launch {
+            try {
+                datastoreRepository.saveStatusRegistration(
+                    userRegistration = userRegistration
+                )
+            }catch (e:Exception){
+                Log.e(Constants.TAG_DATE_STORE, e.message.toString())
+            }
+        }
+    }
 }

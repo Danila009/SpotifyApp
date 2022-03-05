@@ -27,6 +27,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
+import com.example.spotifyfirebase.screen.musicScreen.view.musicInfo.AutorView
+import com.example.spotifyfirebase.screen.musicScreen.view.musicInfo.GenreView
 import com.example.spotifyfirebase.screen.musicScreen.viewModel.MusicViewModel
 import com.example.spotifyfirebase.ui.theme.controlColor
 import com.example.spotifyfirebase.ui.theme.primaryBackground
@@ -104,93 +106,169 @@ fun MusicInfoScreen(
                         color = secondaryBackground,
                         textAlign = TextAlign.Center
                     )
-
-                    LazyRow(content = {
-                        items(music.genre){ item ->
-                            Card(
-                                modifier = Modifier.padding(5.dp),
-                                shape = AbsoluteRoundedCornerShape(15.dp)
+                }
+                LazyRow(content = {
+                    items(music.genre){ item ->
+                        Card(
+                            modifier = Modifier.padding(5.dp),
+                            shape = AbsoluteRoundedCornerShape(15.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    SubcomposeAsyncImage(
-                                        modifier = Modifier
-                                            .size(100.dp)
-                                            .padding(5.dp),
-                                        model = item.genreIcon,
-                                        contentDescription = null,
-                                        loading = {
-                                            val state = painter.state
-                                            if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                                CircularProgressIndicator(
-                                                    color = secondaryBackground
-                                                )
-                                            } else {
-                                                SubcomposeAsyncImageContent()
-                                            }
+                                SubcomposeAsyncImage(
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .padding(5.dp),
+                                    model = item.genreIcon,
+                                    contentDescription = null,
+                                    loading = {
+                                        val state = painter.state
+                                        if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
+                                            CircularProgressIndicator(
+                                                color = secondaryBackground
+                                            )
+                                        } else {
+                                            SubcomposeAsyncImageContent()
                                         }
-                                    )
+                                    }
+                                )
 
-                                    Text(
-                                        text = item.genreTitle,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                }
+                                Text(
+                                    text = item.genreTitle,
+                                    modifier = Modifier.padding(5.dp)
+                                )
                             }
                         }
-                    })
+                    }
+                })
 
-                    LazyRow(content = {
-                        items(music.autors){ item ->
-                            Card(
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .clickable {
+                LazyRow(content = {
+                    items(music.autors){ item ->
+                        Card(
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .clickable {
 
-                                    },
-                                shape = AbsoluteRoundedCornerShape(10.dp),
-                                backgroundColor = controlColor
+                                },
+                            shape = AbsoluteRoundedCornerShape(10.dp),
+                            backgroundColor = controlColor
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    SubcomposeAsyncImage(
-                                        modifier = Modifier
-                                            .size(100.dp)
-                                            .padding(5.dp),
-                                        model = item.posterUrl,
-                                        contentDescription = null,
-                                        loading = {
-                                            val state = painter.state
-                                            if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                                CircularProgressIndicator(
-                                                    color = secondaryBackground
-                                                )
-                                            } else {
-                                                SubcomposeAsyncImageContent()
-                                            }
+                                SubcomposeAsyncImage(
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .padding(5.dp),
+                                    model = item.posterUrl,
+                                    contentDescription = null,
+                                    loading = {
+                                        val state = painter.state
+                                        if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
+                                            CircularProgressIndicator(
+                                                color = secondaryBackground
+                                            )
+                                        } else {
+                                            SubcomposeAsyncImageContent()
                                         }
-                                    )
+                                    }
+                                )
 
-                                    Text(
-                                        text = item.name,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                }
+                                Text(
+                                    text = item.name,
+                                    modifier = Modifier.padding(5.dp)
+                                )
                             }
                         }
-                    })
+                    }
+                })
+
+                Text(
+                    text = music.date,
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth(),
+                    color = secondaryBackground,
+                    textAlign = TextAlign.End
+                )
+            }
+        })
+    }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = primaryBackground
+    ) {
+        LazyColumn(content = {
+            item {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row {
+                        SubcomposeAsyncImage(
+                            modifier = Modifier
+                                .size(300.dp)
+                                .padding(5.dp)
+                                .clickable {
+                                    navController.navigate(MusicRouteScreen.ImageZoomScreen.data(
+                                        imageUrl = music.webIcon,
+                                        musicId = idMusic
+                                    ))
+                                },
+                            model = music.webIcon,
+                            contentDescription = null,
+                            loading = {
+                                val state = painter.state
+                                if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
+                                    CircularProgressIndicator(
+                                        color = secondaryBackground
+                                    )
+                                } else {
+                                    SubcomposeAsyncImageContent()
+                                }
+                            }
+                        )
+
+                        IconButton(onClick = { favoriteCheck.value != favoriteCheck.value }) {
+                            Icon(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = null,
+                                tint = if (favoriteCheck.value) Color.Red else Color.Gray,
+                                modifier = Modifier.padding(5.dp)
+                            )
+                        }
+                    }
 
                     Text(
-                        text = music.date,
+                        text = music.title,
                         modifier = Modifier
                             .padding(5.dp)
                             .fillMaxWidth(),
                         color = secondaryBackground,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.Center
                     )
                 }
+
+                GenreView(
+                    navController = navController,
+                    music = music
+                )
+
+                AutorView(
+                    navController = navController,
+                    music = music
+                )
+
+                Text(
+                    text = music.date,
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth(),
+                    color = secondaryBackground,
+                    textAlign = TextAlign.End
+                )
             }
         })
     }

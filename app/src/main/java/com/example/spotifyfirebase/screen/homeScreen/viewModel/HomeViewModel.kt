@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyfirebase.api.model.playlist.Playlist
+import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.api.repository.ApiRepository
 import com.example.spotifyfirebase.data.MusicDatabase
 import com.example.spotifyfirebase.data.model.Music
@@ -28,6 +29,8 @@ class HomeViewModel @Inject constructor(
     val responseTimeText:StateFlow<String> = _responseTimeText.asStateFlow()
     private val _responsePlaylist:MutableStateFlow<List<Playlist>> = MutableStateFlow(listOf())
     val responsePlaylist:StateFlow<List<Playlist>> = _responsePlaylist.asStateFlow()
+    private val _responseGenre:MutableStateFlow<List<Genre>> = MutableStateFlow(listOf())
+    val responseGenre:StateFlow<List<Genre>> = _responseGenre.asStateFlow()
 
     //Test firebase
     private val musicDatabase:MusicDatabase = MusicDatabase()
@@ -58,6 +61,16 @@ class HomeViewModel @Inject constructor(
             in 11..17-> _responseTimeText.value = "Доброго дня!"
             in 17..21 -> _responseTimeText.value = "Доброго вечера!"
             in 21..24 -> _responseTimeText.value = "Доброй ночи!"
+        }
+    }
+
+    fun getGenre(){
+        viewModelScope.launch {
+            try {
+                _responseGenre.value = apiRepository.getGenre().body()!!
+            }catch (e:Exception){
+                Log.e(TAG_RETROFIT, e.message.toString())
+            }
         }
     }
 }

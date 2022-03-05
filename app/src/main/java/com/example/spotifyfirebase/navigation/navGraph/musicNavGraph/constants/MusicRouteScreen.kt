@@ -17,4 +17,9 @@ sealed class MusicRouteScreen(val route:String) {
             musicId:Int
         ):String = "image_zoom_screen?imageUrl=$imageUrl&musicId=$musicId"
     }
+    object MusicGenre:MusicRouteScreen("music_genre_screen?genreId={genreId}"){
+        fun dara(
+            idGenre:Int
+        ):String = "music_genre_screen?genreId=$idGenre"
+    }
 }

@@ -8,5 +8,6 @@ object MusicRoute {
         const val PLAYLIST_ID = "playlistId"
         const val MUSIC_ID = "musicId"
         const val IMAGE_URL = "imageUrl"
+        const val GENRE_ID = "genreId"
     }
 }

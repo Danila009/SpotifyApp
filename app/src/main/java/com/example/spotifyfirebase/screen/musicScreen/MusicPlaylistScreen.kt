@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.example.spotifyfirebase.api.model.playlist.Playlist
+import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
 import com.example.spotifyfirebase.screen.musicScreen.viewModel.MusicViewModel
 import com.example.spotifyfirebase.ui.theme.primaryBackground
@@ -34,7 +34,7 @@ fun MusicPlaylistScreen(
     navController: NavController,
     idPlaylist: Int,
 ) {
-    val playlistItem = remember { mutableStateOf(Playlist()) }
+    val playlistItem = remember { mutableStateOf(listOf<Music>()) }
     val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
     
     musicViewModel.getPlaylistItem(id = idPlaylist)
@@ -47,7 +47,7 @@ fun MusicPlaylistScreen(
         color = primaryBackground
     ) {
         LazyColumn(content = {
-            items(playlistItem.value.musics){ item ->
+            items(playlistItem.value){ item ->
                 Column {
                     Row(
                         modifier = Modifier

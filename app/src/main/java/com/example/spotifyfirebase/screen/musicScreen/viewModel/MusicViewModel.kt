@@ -19,10 +19,12 @@ import javax.inject.Inject
 class MusicViewModel @Inject constructor(
     private val apiRepository: ApiRepository
 ):ViewModel(){
-    private val _responsePlaylistItem:MutableStateFlow<Playlist> = MutableStateFlow(Playlist())
-    val responsePlaylistItem: StateFlow<Playlist> = _responsePlaylistItem.asStateFlow()
+    private val _responsePlaylistItem:MutableStateFlow<List<Music>> = MutableStateFlow(listOf())
+    val responsePlaylistItem: StateFlow<List<Music>> = _responsePlaylistItem.asStateFlow()
     private val _responseMusicItem:MutableStateFlow<Music> = MutableStateFlow(Music())
     val responseMusicItem:StateFlow<Music> = _responseMusicItem.asStateFlow()
+    private val _responseGenreMusic:MutableStateFlow<List<Music>> = MutableStateFlow(listOf())
+    val responseGenreMusic:StateFlow<List<Music>> = _responseGenreMusic.asStateFlow()
 
     fun getPlaylistItem(id:Int){
         viewModelScope.launch {
@@ -39,7 +41,17 @@ class MusicViewModel @Inject constructor(
             try {
                 _responseMusicItem.value = apiRepository.getMusicItem(id = id).body()!!
             }catch (e:Exception){
+                Log.e(Constants.TAG_RETROFIT, e.message.toString())
+            }
+        }
+    }
 
+    fun getGenreMusic(id:Int){
+        viewModelScope.launch {
+            try {
+                _responseGenreMusic.value = apiRepository.getGenreMusic(id = id).body()!!
+            }catch (e:Exception){
+                Log.e(Constants.TAG_RETROFIT, e.message.toString())
             }
         }
     }
