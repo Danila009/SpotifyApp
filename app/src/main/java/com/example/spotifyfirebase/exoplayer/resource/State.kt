@@ -1,4 +1,4 @@
-package com.example.spotifyfirebase.exoplayer
+package com.example.spotifyfirebase.exoplayer.resource
 
 enum class State {
     STATE_CREATED,

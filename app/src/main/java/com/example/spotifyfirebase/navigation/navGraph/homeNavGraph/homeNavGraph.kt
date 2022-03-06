@@ -1,5 +1,7 @@
 package com.example.spotifyfirebase.navigation.navGraph.homeNavGraph
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -8,7 +10,9 @@ import com.example.spotifyfirebase.navigation.navGraph.homeNavGraph.constants.Ro
 import com.example.spotifyfirebase.navigation.navGraph.homeNavGraph.constants.RouteScreenHome
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.musicNavGraph
 import com.example.spotifyfirebase.screen.homeScreen.HomeScreen
+import com.example.spotifyfirebase.screen.homeScreen.viewModel.HomeViewModel
 
+@ExperimentalFoundationApi
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController
 ) {
@@ -22,7 +26,9 @@ fun NavGraphBuilder.homeNavGraph(
             )
 
             composable(RouteScreenHome.Home.route){
+                val homeViewModel = hiltViewModel<HomeViewModel>()
                 HomeScreen(
+                    homeViewModel = homeViewModel,
                     navController = navController
                 )
             }

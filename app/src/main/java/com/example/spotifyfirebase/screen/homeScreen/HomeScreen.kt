@@ -30,6 +30,8 @@ import coil.compose.SubcomposeAsyncImageContent
 import com.example.spotifyfirebase.api.model.playlist.Playlist
 import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.data.model.Music
+import com.example.spotifyfirebase.exoplayer.resource.Resource
+import com.example.spotifyfirebase.exoplayer.resource.Status
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
 import com.example.spotifyfirebase.screen.homeScreen.view.PlaylistView
 import com.example.spotifyfirebase.screen.homeScreen.viewModel.HomeViewModel
@@ -38,120 +40,143 @@ import com.example.spotifyfirebase.ui.theme.secondaryBackground
 import com.example.spotifyfirebase.utils.Converters.launchWhenStarted
 import kotlinx.coroutines.flow.onEach
 
-@ExperimentalFoundationApi
 @SuppressLint("FlowOperatorInvokedInComposition")
+@ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel,
     navController: NavController
 ) {
     val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
-    var musics by remember { mutableStateOf(listOf<Music>()) }
     var timeText by remember { mutableStateOf("") }
+    val music:MutableState<Resource<List<Music>>> = remember { mutableStateOf(Resource.loading(null)) }
     val playlist = remember { mutableStateOf(listOf<Playlist>()) }
     val genre = remember { mutableStateOf(listOf<Genre>()) }
 
-    homeViewModel.getAllMusic()
-    homeViewModel.responseAllMusic.onEach {
-        musics = it
+//    homeViewModel.getCurrentTimeText()
+//    homeViewModel.responseTimeText.onEach {
+//        timeText = it
+//    }.launchWhenStarted(lifecycleScope)
+//
+//    homeViewModel.getPlaylist()
+//    homeViewModel.responsePlaylist.onEach {
+//        playlist.value = it
+//    }.launchWhenStarted(lifecycleScope)
+//
+//    homeViewModel.getGenre()
+//    homeViewModel.responseGenre.onEach {
+//        genre.value = it
+//    }.launchWhenStarted(lifecycleScope)
+
+    homeViewModel.mediaItems.onEach {
+        music.value = it
     }.launchWhenStarted(lifecycleScope)
 
-    homeViewModel.getCurrentTimeText()
-    homeViewModel.responseTimeText.onEach {
-        timeText = it
-    }.launchWhenStarted(lifecycleScope)
+    /**
+     * Music Firebase Testing
+     */
 
-    homeViewModel.getPlaylist()
-    homeViewModel.responsePlaylist.onEach {
-        playlist.value = it
-    }.launchWhenStarted(lifecycleScope)
-
-    homeViewModel.getGenre()
-    homeViewModel.responseGenre.onEach {
-        genre.value = it
-    }.launchWhenStarted(lifecycleScope)
-
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = primaryBackground
-    ) {
-        Column {
+    when(music.value.status){
+        Status.SUCCESS -> {
             LazyColumn(content = {
-                item {
-                    Column {
-                        Text(
-                            text = timeText,
-                            color = secondaryBackground,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(
-                                start = 20.dp,
-                                bottom = 5.dp,
-                                top = 5.dp,
-                                end = 5.dp
-                            )
-                        )
-
-                        PlaylistView(
-                            navController = navController,
-                            playlist = playlist.value
-                        )
-                    }
-
+                items(music.value.data!!){ item ->
                     Text(
-                        text = "Genre",
-                        color = secondaryBackground,
-                        modifier = Modifier.padding(5.dp),
-                        fontWeight = FontWeight.Bold
+                        text = item.documentMusic,
+                        modifier = Modifier.clickable {
+                            homeViewModel.playOrToggleSong(
+                                mediaItem = item,
+                                toggle = false
+                            )
+                        }
                     )
-
                 }
             })
-
-            LazyVerticalGrid(
-                cells = GridCells.Adaptive(150.dp),
-                content = {
-                    items(genre.value){ item ->
-                        Card(
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .clickable {
-                                    navController.navigate(MusicRouteScreen.MusicGenre.dara(
-                                        idGenre = item.id!!
-                                    ))
-                                },
-                            shape = AbsoluteRoundedCornerShape(10.dp)
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                SubcomposeAsyncImage(
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(10.dp),
-                                    model = item.genreIcon,
-                                    contentDescription = null,
-                                    loading = {
-                                        val stateCoil = painter.state
-                                        if (stateCoil is AsyncImagePainter.State.Loading
-                                            || stateCoil is AsyncImagePainter.State.Error) {
-                                            CircularProgressIndicator(
-                                                color = secondaryBackground
-                                            )
-                                        } else {
-                                            SubcomposeAsyncImageContent()
-                                        }
-                                    }
-                                )
-
-                                Text(
-                                    text = item.genreTitle,
-                                    modifier = Modifier.padding(5.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-            )
         }
+        Status.ERROR -> Unit
+        Status.LOADING -> Unit
     }
+
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = primaryBackground
+//    ) {
+//        Column {
+//            LazyColumn(content = {
+//                item {
+//                    Column {
+//                        Text(
+//                            text = timeText,
+//                            color = secondaryBackground,
+//                            fontWeight = FontWeight.Bold,
+//                            modifier = Modifier.padding(
+//                                start = 20.dp,
+//                                bottom = 5.dp,
+//                                top = 5.dp,
+//                                end = 5.dp
+//                            )
+//                        )
+//
+//                        PlaylistView(
+//                            navController = navController,
+//                            playlist = playlist.value
+//                        )
+//                    }
+//
+//                    Text(
+//                        text = "Genre",
+//                        color = secondaryBackground,
+//                        modifier = Modifier.padding(5.dp),
+//                        fontWeight = FontWeight.Bold
+//                    )
+//
+//                }
+//            })
+//
+//            LazyVerticalGrid(
+//                cells = GridCells.Adaptive(150.dp),
+//                content = {
+//                    items(genre.value){ item ->
+//                        Card(
+//                            modifier = Modifier
+//                                .padding(5.dp)
+//                                .clickable {
+//                                    navController.navigate(MusicRouteScreen.MusicGenre.dara(
+//                                        idGenre = item.id!!
+//                                    ))
+//                                },
+//                            shape = AbsoluteRoundedCornerShape(10.dp)
+//                        ) {
+//                            Column(
+//                                horizontalAlignment = Alignment.CenterHorizontally
+//                            ) {
+//                                SubcomposeAsyncImage(
+//                                    modifier = Modifier
+//                                        .size(100.dp)
+//                                        .padding(10.dp),
+//                                    model = item.genreIcon,
+//                                    contentDescription = null,
+//                                    loading = {
+//                                        val stateCoil = painter.state
+//                                        if (stateCoil is AsyncImagePainter.State.Loading
+//                                            || stateCoil is AsyncImagePainter.State.Error) {
+//                                            CircularProgressIndicator(
+//                                                color = secondaryBackground
+//                                            )
+//                                        } else {
+//                                            SubcomposeAsyncImageContent()
+//                                        }
+//                                    }
+//                                )
+//
+//                                Text(
+//                                    text = item.genreTitle,
+//                                    modifier = Modifier.padding(5.dp)
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            )
+//        }
+//    }
 }

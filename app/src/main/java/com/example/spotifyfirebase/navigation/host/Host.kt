@@ -1,5 +1,6 @@
 package com.example.spotifyfirebase.navigation.host
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import com.example.spotifyfirebase.navigation.navGraph.searchNavGraph.searchNavG
 import com.example.spotifyfirebase.ui.theme.primaryBackground
 import com.example.spotifyfirebase.ui.theme.secondaryBackground
 
+@ExperimentalFoundationApi
 @Composable
 fun Host(
     navHostController: NavHostController
