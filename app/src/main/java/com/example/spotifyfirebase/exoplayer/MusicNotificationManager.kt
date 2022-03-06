@@ -69,16 +69,17 @@ class MusicNotificationManager(
             player: Player,
             callback: PlayerNotificationManager.BitmapCallback,
         ): Bitmap? {
-            val loading = ImageLoader(context)
-            val request = ImageRequest.Builder(context)
-                .data(mediaController.metadata.description.iconUri)
-                .build()
-            var result:Drawable? = null
-
-            CoroutineScope(Dispatchers.IO).launch {
-                result = (loading.execute(request) as SuccessResult).drawable
-            }
-            return (result as BitmapDrawable).bitmap
+            return null
+//            val loading = ImageLoader(context)
+//            val request = ImageRequest.Builder(context)
+//                .data(mediaController.metadata.description.iconUri)
+//                .build()
+//            var result:Drawable? = null
+//
+//            CoroutineScope(Dispatchers.IO).launch {
+//                result = (loading.execute(request) as SuccessResult).drawable
+//            }
+//            return (result as BitmapDrawable).bitmap
         }
     }
 }

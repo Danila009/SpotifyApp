@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
@@ -31,7 +30,6 @@ import com.example.spotifyfirebase.api.model.playlist.Playlist
 import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.data.model.Music
 import com.example.spotifyfirebase.exoplayer.resource.Resource
-import com.example.spotifyfirebase.exoplayer.resource.Status
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
 import com.example.spotifyfirebase.screen.homeScreen.view.PlaylistView
 import com.example.spotifyfirebase.screen.homeScreen.viewModel.HomeViewModel
@@ -53,130 +51,156 @@ fun HomeScreen(
     val playlist = remember { mutableStateOf(listOf<Playlist>()) }
     val genre = remember { mutableStateOf(listOf<Genre>()) }
 
-//    homeViewModel.getCurrentTimeText()
-//    homeViewModel.responseTimeText.onEach {
-//        timeText = it
-//    }.launchWhenStarted(lifecycleScope)
-//
-//    homeViewModel.getPlaylist()
-//    homeViewModel.responsePlaylist.onEach {
-//        playlist.value = it
-//    }.launchWhenStarted(lifecycleScope)
-//
-//    homeViewModel.getGenre()
-//    homeViewModel.responseGenre.onEach {
-//        genre.value = it
-//    }.launchWhenStarted(lifecycleScope)
+    homeViewModel.getCurrentTimeText()
+    homeViewModel.responseTimeText.onEach {
+        timeText = it
+    }.launchWhenStarted(lifecycleScope)
+
+    homeViewModel.getPlaylist()
+    homeViewModel.responsePlaylist.onEach {
+        playlist.value = it
+    }.launchWhenStarted(lifecycleScope)
+
+    homeViewModel.getGenre()
+    homeViewModel.responseGenre.onEach {
+        genre.value = it
+    }.launchWhenStarted(lifecycleScope)
 
     homeViewModel.mediaItems.onEach {
         music.value = it
     }.launchWhenStarted(lifecycleScope)
 
-    /**
-     * Music Firebase Testing
-     */
-
-    when(music.value.status){
-        Status.SUCCESS -> {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = primaryBackground
+    ) {
+        Column {
             LazyColumn(content = {
-                items(music.value.data!!){ item ->
+
+                item {
                     Text(
-                        text = item.documentMusic,
-                        modifier = Modifier.clickable {
-                            homeViewModel.playOrToggleSong(
-                                mediaItem = item,
-                                toggle = false
-                            )
-                        }
+                        text = timeText,
+                        color = secondaryBackground,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(
+                            start = 20.dp,
+                            bottom = 5.dp,
+                            top = 5.dp,
+                            end = 5.dp
+                        )
                     )
                 }
-            })
-        }
-        Status.ERROR -> Unit
-        Status.LOADING -> Unit
-    }
 
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = primaryBackground
-//    ) {
-//        Column {
-//            LazyColumn(content = {
-//                item {
-//                    Column {
-//                        Text(
-//                            text = timeText,
-//                            color = secondaryBackground,
-//                            fontWeight = FontWeight.Bold,
-//                            modifier = Modifier.padding(
-//                                start = 20.dp,
-//                                bottom = 5.dp,
-//                                top = 5.dp,
-//                                end = 5.dp
-//                            )
-//                        )
-//
-//                        PlaylistView(
-//                            navController = navController,
-//                            playlist = playlist.value
-//                        )
-//                    }
-//
-//                    Text(
-//                        text = "Genre",
-//                        color = secondaryBackground,
-//                        modifier = Modifier.padding(5.dp),
-//                        fontWeight = FontWeight.Bold
-//                    )
-//
-//                }
-//            })
-//
-//            LazyVerticalGrid(
-//                cells = GridCells.Adaptive(150.dp),
-//                content = {
-//                    items(genre.value){ item ->
-//                        Card(
-//                            modifier = Modifier
-//                                .padding(5.dp)
-//                                .clickable {
-//                                    navController.navigate(MusicRouteScreen.MusicGenre.dara(
-//                                        idGenre = item.id!!
-//                                    ))
-//                                },
-//                            shape = AbsoluteRoundedCornerShape(10.dp)
-//                        ) {
-//                            Column(
-//                                horizontalAlignment = Alignment.CenterHorizontally
-//                            ) {
-//                                SubcomposeAsyncImage(
-//                                    modifier = Modifier
-//                                        .size(100.dp)
-//                                        .padding(10.dp),
-//                                    model = item.genreIcon,
-//                                    contentDescription = null,
-//                                    loading = {
-//                                        val stateCoil = painter.state
-//                                        if (stateCoil is AsyncImagePainter.State.Loading
-//                                            || stateCoil is AsyncImagePainter.State.Error) {
-//                                            CircularProgressIndicator(
-//                                                color = secondaryBackground
-//                                            )
-//                                        } else {
-//                                            SubcomposeAsyncImageContent()
-//                                        }
-//                                    }
-//                                )
-//
-//                                Text(
-//                                    text = item.genreTitle,
-//                                    modifier = Modifier.padding(5.dp)
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            )
-//        }
-//    }
+                item {
+                    LazyRow(content = {
+                        music.value.data?.let {
+                            items(it){ item ->
+                                Card(
+                                    modifier = Modifier
+                                        .padding(5.dp)
+                                        .clickable {
+                                            homeViewModel.playOrToggleSong(
+                                                mediaItem = item,
+                                                toggle = false
+                                            )
+                                        },
+                                    shape = AbsoluteRoundedCornerShape(10.dp)
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        SubcomposeAsyncImage(
+                                            modifier = Modifier
+                                                .size(100.dp)
+                                                .padding(10.dp),
+                                            model = item.iconUrl,
+                                            contentDescription = null,
+                                            loading = {
+                                                val stateCoil = painter.state
+                                                if (stateCoil is AsyncImagePainter.State.Loading
+                                                    || stateCoil is AsyncImagePainter.State.Error) {
+                                                    CircularProgressIndicator(
+                                                        color = secondaryBackground
+                                                    )
+                                                } else {
+                                                    SubcomposeAsyncImageContent()
+                                                }
+                                            }
+                                        )
+
+                                        Text(
+                                            text = item.documentMusic,
+                                            modifier = Modifier.padding(5.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }
+
+                item {
+                    Column {
+                        PlaylistView(
+                            navController = navController,
+                            playlist = playlist.value
+                        )
+
+                        Text(
+                            text = "Genre",
+                            color = secondaryBackground,
+                            modifier = Modifier.padding(5.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            })
+
+            LazyVerticalGrid(
+                cells = GridCells.Adaptive(150.dp),
+                content = {
+                    items(genre.value){ item ->
+                        Card(
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .clickable {
+                                    navController.navigate(MusicRouteScreen.MusicGenre.dara(
+                                        idGenre = item.id!!
+                                    ))
+                                },
+                            shape = AbsoluteRoundedCornerShape(10.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                SubcomposeAsyncImage(
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .padding(10.dp),
+                                    model = item.genreIcon,
+                                    contentDescription = null,
+                                    loading = {
+                                        val stateCoil = painter.state
+                                        if (stateCoil is AsyncImagePainter.State.Loading
+                                            || stateCoil is AsyncImagePainter.State.Error) {
+                                            CircularProgressIndicator(
+                                                color = secondaryBackground
+                                            )
+                                        } else {
+                                            SubcomposeAsyncImageContent()
+                                        }
+                                    }
+                                )
+
+                                Text(
+                                    text = item.genreTitle,
+                                    modifier = Modifier.padding(5.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }
 }
