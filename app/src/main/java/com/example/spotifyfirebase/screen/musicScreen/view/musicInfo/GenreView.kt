@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
 import com.example.spotifyfirebase.ui.theme.secondaryBackground
@@ -25,10 +26,10 @@ import com.example.spotifyfirebase.ui.theme.secondaryBackground
 @Composable
 fun GenreView(
     navController: NavController,
-    music: Music
+    genre:List<Genre>
 ) {
     LazyRow(content = {
-        items(music.genre){ item ->
+        items(genre){ item ->
             Card(
                 modifier = Modifier
                     .padding(5.dp)

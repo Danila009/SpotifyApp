@@ -6,12 +6,16 @@ import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.api.model.user.Authorization
 import com.example.spotifyfirebase.api.model.user.Header
+import com.example.spotifyfirebase.api.model.user.HistorySearch
 import com.example.spotifyfirebase.api.model.user.User
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.AUTHORIZATION_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.AUTOR_ID_MUSIC_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.AUTOR_ID_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.GENRE_MUSIC_ID_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.GENRE_URL
+import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.HISTORY_SEARCH_URL
+import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.MUSIC_ID_AUTOR_URL
+import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.MUSIC_ID_GENRE_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.MUSIC_ID_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.MUSIC_URL
 import com.example.spotifyfirebase.api.utils.ConstantsUrlApi.PLAYLIST_ID_URL
@@ -61,6 +65,16 @@ interface SpotifyApi {
         @Path("id") id:Int
     ):Response<Autor>
 
+    @GET(MUSIC_ID_GENRE_URL)
+    suspend fun getMusicGenre(
+        @Path("id") idMusic:Int
+    ):Response<List<Genre>>
+
+    @GET(MUSIC_ID_AUTOR_URL)
+    suspend fun getMusicAutor(
+        @Path("id") idMusic:Int
+    ):Response<List<Autor>>
+
     @GET(AUTOR_ID_MUSIC_URL)
     suspend fun getAutorMusic(
         @Path("id") id:Int
@@ -73,4 +87,12 @@ interface SpotifyApi {
     suspend fun getGenreMusic(
         @Path("id") id: Int
     ):Response<List<Music>>
+
+    @GET(HISTORY_SEARCH_URL)
+    suspend fun getHistoeySearch():Response<List<HistorySearch>>
+
+    @POST(HISTORY_SEARCH_URL)
+    suspend fun poatHistorySearch(
+        @Body historySearch: HistorySearch
+    )
 }

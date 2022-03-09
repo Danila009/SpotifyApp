@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.example.spotifyfirebase.api.model.person.Autor
 import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.navigation.navGraph.autorNavGraph.constants.AutorRouteScreen
 import com.example.spotifyfirebase.ui.theme.controlColor
@@ -25,18 +26,19 @@ import com.example.spotifyfirebase.ui.theme.secondaryBackground
 
 @Composable
 fun AutorView(
-    music:Music,
-    navController: NavController
+    autor:List<Autor>,
+    navController: NavController,
+    musicId:Int
 ) {
     LazyRow(content = {
-        items(music.autors){ item ->
+        items(autor){ item ->
             Card(
                 modifier = Modifier
                     .padding(5.dp)
                     .clickable {
                         navController.navigate(AutorRouteScreen.AutorInfo.date(
                             autorId = item.id!!,
-                            musicId = music.id!!
+                            musicId = musicId
                         ))
                     },
                 shape = AbsoluteRoundedCornerShape(10.dp),

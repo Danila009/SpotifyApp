@@ -25,6 +25,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.example.spotifyfirebase.api.model.person.Autor
+import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.navigation.navGraph.musicNavGraph.constants.MusicRouteScreen
 import com.example.spotifyfirebase.screen.musicScreen.view.musicInfo.AutorView
@@ -46,10 +48,22 @@ fun MusicInfoScreen(
     val favoriteCheck = remember { mutableStateOf(false) }
     val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
     var music by remember { mutableStateOf(Music()) }
+    val musicGenre = remember { mutableStateOf(listOf<Genre>()) }
+    val musicAutor = remember { mutableStateOf(listOf<Autor>()) }
 
     musicViewModel.getMusicItem(id = idMusic)
     musicViewModel.responseMusicItem.onEach {
         music = it
+    }.launchWhenStarted(lifecycleScope)
+
+    musicViewModel.getMusicGenre(idMusic)
+    musicViewModel.responseMusicGenre.onEach {
+        musicGenre.value = it
+    }.launchWhenStarted(lifecycleScope)
+
+    musicViewModel.getMusicAutor(idMusic)
+    musicViewModel.responseMusicAutor.onEach {
+        musicAutor.value = it
     }.launchWhenStarted(lifecycleScope)
 
     Surface(
@@ -69,10 +83,12 @@ fun MusicInfoScreen(
                                 .size(300.dp)
                                 .padding(5.dp)
                                 .clickable {
-                                    navController.navigate(MusicRouteScreen.ImageZoomScreen.data(
-                                        imageUrl = music.webIcon,
-                                        musicId = idMusic
-                                    ))
+                                    navController.navigate(
+                                        MusicRouteScreen.ImageZoomScreen.data(
+                                            imageUrl = music.webIcon,
+                                            musicId = idMusic
+                                        )
+                                    )
                                 },
                             model = music.webIcon,
                             contentDescription = null,
@@ -108,7 +124,7 @@ fun MusicInfoScreen(
                     )
                 }
                 LazyRow(content = {
-                    items(music.genre){ item ->
+                    items(musicGenre.value){ item ->
                         Card(
                             modifier = Modifier.padding(5.dp),
                             shape = AbsoluteRoundedCornerShape(15.dp)
@@ -144,7 +160,7 @@ fun MusicInfoScreen(
                 })
 
                 LazyRow(content = {
-                    items(music.autors){ item ->
+                    items(musicAutor.value){ item ->
                         Card(
                             modifier = Modifier
                                 .padding(5.dp)
@@ -212,10 +228,12 @@ fun MusicInfoScreen(
                                 .size(300.dp)
                                 .padding(5.dp)
                                 .clickable {
-                                    navController.navigate(MusicRouteScreen.ImageZoomScreen.data(
-                                        imageUrl = music.webIcon,
-                                        musicId = idMusic
-                                    ))
+                                    navController.navigate(
+                                        MusicRouteScreen.ImageZoomScreen.data(
+                                            imageUrl = music.webIcon,
+                                            musicId = idMusic
+                                        )
+                                    )
                                 },
                             model = music.webIcon,
                             contentDescription = null,
@@ -253,12 +271,13 @@ fun MusicInfoScreen(
 
                 GenreView(
                     navController = navController,
-                    music = music
+                    genre = musicGenre.value
                 )
 
                 AutorView(
                     navController = navController,
-                    music = music
+                    autor = musicAutor.value,
+                    musicId = idMusic
                 )
 
                 Text(

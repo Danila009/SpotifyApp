@@ -6,6 +6,7 @@ import com.example.spotifyfirebase.api.model.playlist.Playlist
 import com.example.spotifyfirebase.api.model.playlist.music.Genre
 import com.example.spotifyfirebase.api.model.playlist.music.Music
 import com.example.spotifyfirebase.api.model.user.Authorization
+import com.example.spotifyfirebase.api.model.user.HistorySearch
 import com.example.spotifyfirebase.api.model.user.User
 import retrofit2.Response
 import javax.inject.Inject
@@ -40,6 +41,10 @@ class ApiRepository @Inject constructor(
 
     suspend fun getMusicItem(id: Int) = spotifyApi.getMusicItem(id = id)
 
+    suspend fun getMusicGenre(idMusic:Int):Response<List<Genre>> = spotifyApi.getMusicGenre(idMusic)
+
+    suspend fun getMusicAutor(idMusic: Int):Response<List<Autor>> = spotifyApi.getMusicAutor(idMusic)
+
     suspend fun getAutorItem(id: Int):Response<Autor> = spotifyApi.getAutorItem(id = id)
 
     suspend fun getAutorMusic(id: Int):Response<List<Music>> = spotifyApi.getAutorMusic(id = id)
@@ -47,4 +52,8 @@ class ApiRepository @Inject constructor(
     suspend fun getGenre():Response<List<Genre>> = spotifyApi.getGenre()
 
     suspend fun getGenreMusic(id: Int):Response<List<Music>> = spotifyApi.getGenreMusic(id = id)
+
+    suspend fun getHistoeySearch():Response<List<HistorySearch>> = spotifyApi.getHistoeySearch()
+
+    suspend fun postHistorySearch(historySearch: HistorySearch) = spotifyApi.poatHistorySearch(historySearch)
 }

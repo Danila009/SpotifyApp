@@ -102,7 +102,6 @@ class HomeViewModel @Inject constructor(
     fun skipToNextSong() =
         musicServiceConnection.transportControls.skipToNext()
 
-
     fun skipToPreviousSong() =
         musicServiceConnection.transportControls.skipToPrevious()
 
