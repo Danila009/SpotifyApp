@@ -1,5 +1,6 @@
 package com.example.spotifyfirebase.screen.homeScreen.view
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -10,6 +11,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -61,6 +63,8 @@ fun PlaylistView(
                         ))
                     }, horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val context = LocalContext.current
+                Toast.makeText(context, item.icon, Toast.LENGTH_SHORT).show()
                 SubcomposeAsyncImage(
                     modifier = Modifier.size(100.dp),
                     model = item.icon,

@@ -112,74 +112,61 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxSize(),
                 color = primaryBackground
             ) {
-                if (!checkSearch.value){
-                    LazyColumn(content = {
-                        items(historySearch.value){ item ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        search.value = item.title
-                                        checkSearch.value = true
-                                    }){
-                                Text(
-                                    text = item.title,
-                                    modifier = Modifier.padding(5.dp)
-                                )
-                                Divider()
-                            }
-                        }
-                    })
-                }else{
-                    LazyColumn(content = {
-                        items(musics.value){ item ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate(
-                                            MusicRouteScreen.MusicInfo.data(
-                                                musicId = item.id!!
-                                            )
+                LazyColumn(content = {
+                    items(musics.value){ item ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate(
+                                        MusicRouteScreen.MusicInfo.data(
+                                            musicId = item.id!!
                                         )
-                                    }
-                            ) {
-                                SubcomposeAsyncImage(
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(10.dp)
-                                        .clickable {
-
-                                        },
-                                    model = item.webIcon,
-                                    contentDescription = null,
-                                    loading = {
-                                        val stateCoil = painter.state
-                                        if (stateCoil is AsyncImagePainter.State.Loading || stateCoil is AsyncImagePainter.State.Error) {
-                                            CircularProgressIndicator(
-                                                color = secondaryBackground
-                                            )
-                                        } else {
-                                            SubcomposeAsyncImageContent()
-                                        }
-                                    }
-                                )
-
-                                Column {
-                                    Text(
-                                        text = item.title,
-                                        modifier = Modifier.padding(10.dp)
-                                    )
-                                    Text(
-                                        text = item.date,
-                                        modifier = Modifier.padding(10.dp)
                                     )
                                 }
+                        ) {
+                            SubcomposeAsyncImage(
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .padding(10.dp)
+                                    .clickable {
+                                        searchViewModel.playOrToggleSong(
+                                            com.example.spotifyfirebase.data.model.Music(
+                                                documentMusic = item.document,
+                                                musicUrl = item.musicUrl,
+                                                iconUrl = item.webIcon,
+                                                webIconUrl = item.webIcon
+                                            )
+                                        )
+                                    },
+                                model = item.webIcon,
+                                contentDescription = null,
+                                loading = {
+                                    val stateCoil = painter.state
+                                    if (stateCoil is AsyncImagePainter.State.Loading || stateCoil is AsyncImagePainter.State.Error) {
+                                        CircularProgressIndicator(
+                                            color = secondaryBackground
+                                        )
+                                    } else {
+                                        SubcomposeAsyncImageContent()
+                                    }
+                                }
+                            )
+
+                            Column {
+                                Text(
+                                    text = item.title,
+                                    modifier = Modifier.padding(10.dp)
+                                )
+                                Text(
+                                    text = item.date,
+                                    modifier = Modifier.padding(10.dp)
+                                )
                             }
-                            Divider()
                         }
-                    })
-                }
+                        Divider()
+                    }
+                })
             }
         }
     )
